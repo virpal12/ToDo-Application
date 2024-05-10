@@ -35,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         MyImage = storedEmail;
       });
-      print("=====================================>"+MyImage);
     } else {
       // Handle the case where the 'Email' key is not found or is empty
     }

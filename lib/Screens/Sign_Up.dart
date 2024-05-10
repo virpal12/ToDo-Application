@@ -270,7 +270,7 @@ class _SignUPState extends State<SignUP> {
     await imagesRef.child(name).putFile(File(pickedImage!.path));
 
     String imageURL = await imagesRef.child(name).getDownloadURL();
-print("====+++>+>+>++++++++"+MyImage);
+
     FirebaseFirestore.instance
         .collection("Images")
         .doc(email.text)
