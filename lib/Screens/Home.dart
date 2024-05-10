@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:to_do/Ui_Helper/drower.dart';
 
 import '../Ui_Helper/Edit_task.dart';
 import 'Login.dart';
@@ -58,19 +57,22 @@ class _HomeScreenState extends State<HomeScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                StreamBuilder(stream: FirebaseFirestore.instance.collection("Images").doc(MyImage).snapshots(),
-                    builder: (context, snapshot){
-                  if(snapshot.hasData){
-                    return CircleAvatar(
-                      radius: 60,
-                      backgroundImage: NetworkImage(snapshot.data!["Image Url"]),
-                    );
-                  }else{
-                    return CircularProgressIndicator();
-                  }
-                    }
-                    ),
-
+                StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection("Images")
+                        .doc(MyImage)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return CircleAvatar(
+                          radius: 60,
+                          backgroundImage:
+                              NetworkImage(snapshot.data!["Image Url"]),
+                        );
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    }),
                 SizedBox(
                   height: 19,
                 ),
