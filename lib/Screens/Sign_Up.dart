@@ -54,7 +54,7 @@ class _SignUPState extends State<SignUP> {
     if (name == "" && email == "" && pass == "") {
       log("message");
     } else {
-      FirebaseFirestore.instance.collection("Profile").doc().set({
+      FirebaseFirestore.instance.collection("Profile").doc(email.toString()).set({
         "Name": name.toString(),
         "Email": email.toString(),
         "Password": pass.toString(),
@@ -263,17 +263,17 @@ class _SignUPState extends State<SignUP> {
   Future uploadImage() async {
     final Reference storageRef = FirebaseStorage.instance.ref();
 
-    final imagesRef = storageRef.child("images/$MyImage");
+    final imagesRef = storageRef.child("images/$email");
 
     String name = pickedImage!.path.split("/").last;
 
     await imagesRef.child(name).putFile(File(pickedImage!.path));
 
     String imageURL = await imagesRef.child(name).getDownloadURL();
-
+print("====+++>+>+>++++++++"+MyImage);
     FirebaseFirestore.instance
         .collection("Images")
-        .doc(MyImage)
+        .doc(email.text)
         .set({"Name": name, "Image Url": imageURL}).then(
             (value) => const Text('Image Uploaded'));
     return imageURL;

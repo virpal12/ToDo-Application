@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:to_do/Ui_Helper/drower.dart';
 
 import '../Ui_Helper/Edit_task.dart';
+import 'Login.dart';
+import 'Profile.dart';
 import 'Task.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -32,6 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         MyImage = storedEmail;
       });
+      print("=====================================>"+MyImage);
     } else {
       // Handle the case where the 'Email' key is not found or is empty
     }
@@ -49,7 +53,56 @@ class _HomeScreenState extends State<HomeScreen> {
         centerTitle: true,
         backgroundColor: Colors.blueGrey.shade400,
       ),
-      drawer: drawer.Costum_Drower(context),
+      drawer: Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 38.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                StreamBuilder(stream: FirebaseFirestore.instance.collection("Images").doc(MyImage).snapshots(),
+                    builder: (context, snapshot){
+                  if(snapshot.hasData){
+                    return CircleAvatar(
+                      radius: 60,
+                      backgroundImage: NetworkImage(snapshot.data!["Image Url"]),
+                    );
+                  }else{
+                    return CircularProgressIndicator();
+                  }
+                    }
+                    ),
+
+                SizedBox(
+                  height: 19,
+                ),
+                TextButton(
+                    onPressed: () {
+                      Navigator.push(context as BuildContext,
+                          MaterialPageRoute(builder: (context) => Profile()));
+                    },
+                    child: Text(
+                      'My Profile',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+                    )),
+                TextButton(
+                    onPressed: () async {
+                      try {
+                        await FirebaseAuth.instance.signOut();
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => Login()));
+                      } catch (e) {
+                        print("Error logging out: $e");
+                      }
+                    },
+                    child: Text('Logout',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 24)))
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Column(
         children: [
           Expanded(
